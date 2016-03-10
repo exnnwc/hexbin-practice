@@ -1,13 +1,16 @@
 <?php 
+define("MAX_NUM", 100);
 session_start();
-if (empty($_POST['match'])):
-?>
-    YO
-<?php endif; ?>
 
-<?php
-    $_SESSION=$_POST;
-var_dump($_POST);
+if (!empty($_POST['match'])){
+	if ($_POST['match'] == $_POST['convert_to']){
+		echo $_POST['match'] . " = " . $_POST['convert_to'] . "(". $_POST['actual'] .") Match successful!";
+	} else if ($_POST['match'] != $_POST['convert_to']){
+		echo $_POST['match'] . " != " . $_POST['convert_to'] . "(". $_POST['actual'] .") Match unsuccessful!";
+	}
+}
+$_SESSION=$_POST;
+
 $captions=["dec"=>"decimal", "hex"=>"hexadecimal", "bin"=>"binary"];
 
  ?>
@@ -58,10 +61,10 @@ Convert
 <?php
     echo    isset($_SESSION['start'])
               ? $captions[$_SESSION['start']]
-              : $captions[0];
+              : $captions['dec'];
 ?> 
 number (<?php
-$rand_num=rand(1,100000);
+$rand_num=rand(1, MAX_NUM);
     echo    isset($_SESSION['start'])
               ? convert($rand_num, $_SESSION['start'])
               : $rand_num;
@@ -69,16 +72,17 @@ $rand_num=rand(1,100000);
 <?php
     echo    isset($_SESSION['convert'])
               ? $captions[$_SESSION['convert']]
-              : $captions[0];
+              : $captions['dec'];
 ?> number!
 </div>
-<input name='match' type='text' />
-<input name='convert_to' type='hidden'  value='
-    <?php echo isset($_SESSION['convert'])
-                ? convert($rand_num, $_SESSION['convert'])
-                : $rand_num;
-    ?>
-  ' />
+<input name='match' type='text' autofocus/>
+<input name='convert_to' type='hidden'  value='<?php 
+	echo isset($_SESSION['convert'])
+		? convert($rand_num, $_SESSION['convert'])
+        : $rand_num;
+    ?>' />
+  
+  <input name='actual' type='hidden'  value='<?php echo $rand_num;?>' />
 <input type='submit' value='Match' />
 </form>
 </div>
