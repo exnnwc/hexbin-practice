@@ -1,7 +1,6 @@
 <?php 
-define("MAX_NUM", 100);
+define("SELECTED", 2);
 session_start();
-
 if (!empty($_POST['match'])){
 	if ($_POST['match'] == $_POST['convert_to']){
 		echo $_POST['match'] . " = " . $_POST['convert_to'] . "(". $_POST['actual'] .") Match successful!";
@@ -12,9 +11,23 @@ if (!empty($_POST['match'])){
 $_SESSION=$_POST;
 
 $captions=["dec"=>"decimal", "hex"=>"hexadecimal", "bin"=>"binary"];
-
- ?>
+?>
 <form method="post" action="">
+Maximum Number Of Digits:
+<select name='num_of_digits' style='width:35px'>
+<?php
+$num_of_digits = range(1,9);
+foreach ($num_of_digits as $digit){
+	echo "<option value='$digit'";
+	if ((!isset($_POST['num_of_digits']) && $digit==SELECTED) || (isset($_POST['num_of_digits']) && $digit==$_POST['num_of_digits'])){
+		echo " selected";
+		
+	}
+	echo ">$digit</option>";
+}
+ ?>
+ </select>
+
 <h3 style='margin-bottom:0px;'>Start with:</h3>
 <div>
 
@@ -64,7 +77,16 @@ Convert
               : $captions['dec'];
 ?> 
 number (<?php
-$rand_num=rand(1, MAX_NUM);
+$num_of_digits=	isset ($_POST['num_of_digits'])
+					? $_POST['num_of_digits']
+					: SELECTED;			
+$max_num="";					
+for ($digits=0;$digits<$num_of_digits;$digits++){
+	$max_num=$max_num."9";
+}
+$max_num = (int) $max_num;
+
+$rand_num=rand(1, $max_num);
     echo    isset($_SESSION['start'])
               ? convert($rand_num, $_SESSION['start'])
               : $rand_num;
