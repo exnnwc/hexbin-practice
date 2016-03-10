@@ -1,6 +1,7 @@
 <?php 
 define("SELECTED", 2);
 session_start();
+
 if (!empty($_POST['match'])){
 	if ($_POST['match'] == $_POST['convert_to']){
 		echo $_POST['match'] . " = " . $_POST['convert_to'] . "(". $_POST['actual'] .") Match successful!";
